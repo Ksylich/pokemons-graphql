@@ -11,7 +11,7 @@ const defaultState = {
     pokemons: [],
     favorites: [],
     currentPokemon: 1,
-    pokemonsCount: 30,
+    pokemonsCount: 151,
   },
 };
 

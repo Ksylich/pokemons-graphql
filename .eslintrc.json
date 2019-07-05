@@ -8,6 +8,7 @@
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
     },
+    "parser": "babel-eslint",
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -21,6 +22,7 @@
     "rules": {
         "import/prefer-default-export": 0,
         "react/prop-types":0,
-        "no-console":0
+        "no-console":0,
+        "react/prefer-stateless-function":0
     }
 }

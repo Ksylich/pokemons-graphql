@@ -16,7 +16,7 @@ const PokemonCardsContainer = ({ localState }) => (
       if (error) return <ErrorIndicator />;
 
       return (
-        <PokemonCards pokemons={data.pokemons} onHandleChoosePokemon={() => {}} />
+        <PokemonCards pokemons={data.pokemons} />
       );
     }
 }

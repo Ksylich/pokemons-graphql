@@ -5,17 +5,16 @@ import PokemonCardItem from '../pokemon-card-item';
 
 import './pokemon-cards.css';
 
-const PokemonCards = ({ pokemons, onHandleChoosePokemon }) => {
+const PokemonCards = ({ pokemons }) => {
   const renderMovie = useCallback(
     pokemon => (
       <PokemonCardItem
         key={pokemon.id}
         pokemon={pokemon}
         idx={pokemons.findIndex(m => m.id === pokemon.id)}
-        onHandleChoosePokemon={onHandleChoosePokemon}
       />
     ),
-    [pokemons, onHandleChoosePokemon],
+    [pokemons],
   );
 
   return (

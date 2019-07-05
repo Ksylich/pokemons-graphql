@@ -4,6 +4,7 @@ import { LastLocationProvider } from 'react-router-last-location';
 
 import Header from '../header';
 import MainPage from '../pages/main-page';
+import PokemonDetailsPage from '../pages/pokemon-details-page';
 
 
 import './app.css';
@@ -16,9 +17,9 @@ const App = () => (
       <Switch>
         <Route path="/" component={MainPage} exact />
 
-        {/* <Route path="/movie-details-page" component={MovieDetailsPage} />
+        <Route path="/pokemon-details-page" component={PokemonDetailsPage} />
 
-        <Route path="/favorites-page" component={FavoritesPage} /> */}
+        {/* <Route path="/favorites-page" component={FavoritesPage} /> */}
       </Switch>
     </Fragment>
   </LastLocationProvider>
