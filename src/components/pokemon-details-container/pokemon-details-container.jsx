@@ -1,68 +1,75 @@
 import React, { Component } from 'react';
 import { Query, graphql, compose } from 'react-apollo';
 import { withLastLocation } from 'react-router-last-location';
+
 import Spinner from '../spinner';
 import ErrorIndicator from '../error-indicator';
 
 
 import PokemonDetails from '../pokemon-details';
-import { getPokemons, getState, getPokemon } from '../../graphql/queries';
+import {
+  getPokemons, getState, getPokemon, changeCurrentPokemon,
+} from '../../graphql/queries';
+
+let pokemonsArr;
 
 class PokemonDetailsContainer extends Component {
-  onNextClick = () => null
+  onNextClick = () => {
+    const { changePokemonAction, localState } = this.props;
+
+
+    const next = pokemonsArr.findIndex(pkmn => pkmn.name === localState.currentPokemon) + 1;
+
+    const nextName = next >= pokemonsArr.length ? pokemonsArr[0].name : pokemonsArr[next].name;
+
+
+    changePokemonAction({
+      variables: {
+        name: nextName,
+      },
+    });
+  }
+
 
   returnArr = (pokemons) => {
     const { localState, lastLocation } = this.props;
     return lastLocation.pathname === '/' ? pokemons : localState.favorites;
   }
 
-  getPokemonFromApi = name => (
-    <Query
-      query={getPokemon}
-      variables={{ name }}
-    >
-      {({ loading, error, data }) => {
-        if (loading) return <Spinner />;
-        if (error) return <ErrorIndicator />;
-
-        return data.pokemon;
-      }}
-    </Query>
-  )
-
-  findCurrentPokemon = () => {
-    const name = window.location.pathname.match(/\/([^\/]+)\/?$/)[1];
-
-    console.log(name); // yields: "/js" (where snippets run)
-
-    const pokemon = this.getPokemonFromApi(name);
-
-    return pokemon;
-  }
 
   checkIsFavorite(pokemon) {
     const { localState } = this.props;
-    return !localState.favorites.find(mov => mov.id === pokemon.id);
+    return !localState.favorites.find(mov => mov.name === pokemon.name);
   }
 
   render() {
     const { localState } = this.props;
+    // console.log('localState', localState);
+    const name = localState.currentPokemon;
     return (
       <Query query={getPokemons} variables={{ count: localState.pokemonsCount }}>
-        {({ loading, error, data }) => {
-          if (loading) return <Spinner />;
-          if (error) return <ErrorIndicator />;
+        {({ loading: loadingOne, error: errorOne, data: { pokemons } }) => (
+          <Query query={getPokemon} variables={{ name }}>
+            {({ lloading: loadingTwo, error: errorTwo, data: { pokemon } }) => {
+              if (loadingOne || loadingTwo) return <Spinner />;
+              if (errorOne || errorTwo) return <ErrorIndicator />;
+              pokemonsArr = this.returnArr(pokemons);
+              // console.log('pokemon', pokemon);
 
-          const mvs = this.returnArr(data.pokemons);
-          const pokemon = this.findCurrentPokemon();
-          console.log('pokemon', pokemon);
-          const isFavorite = this.checkIsFavorite(pokemon);
-          return (
-            // <PokemonDetails pokemon={data.pokemons} isFavorite={isFavorite} onHandleNext={this.onNextClick} pokemons={mvs} />
-            <div>PokemonDetails</div>
-          );
-        }
-}
+              if (pokemon !== undefined) {
+                const isFavorite = this.checkIsFavorite(pokemon);
+                return (
+                  <PokemonDetails
+                    pokemon={pokemon}
+                    isFavorite={isFavorite}
+                    onHandleNext={this.onNextClick}
+                  />
+                );
+              }
+              return <Spinner />;
+            }}
+          </Query>
+        )}
       </Query>
     );
   }
@@ -71,6 +78,7 @@ class PokemonDetailsContainer extends Component {
 
 export default withLastLocation(
   compose(
+    graphql(changeCurrentPokemon, { name: 'changePokemonAction' }),
     graphql(getState, {
       props: ({ data: { localState } }) => ({
         localState,

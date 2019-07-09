@@ -1,7 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-import './movie-details-desktop.css';
+import './pokemon-details-desktop.css';
 
 import left from '../../assets/icons/left-round-16.png';
 import right from '../../assets/icons/right-round-16.png';
@@ -26,10 +25,5 @@ const DecktopNav = ({ onHandleBack, onHandleNext }) => (
     </div>
   </div>
 );
-
-DecktopNav.propTypes = {
-  onHandleBack: PropTypes.func.isRequired,
-  onHandleNext: PropTypes.func.isRequired,
-};
 
 export default DecktopNav;

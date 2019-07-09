@@ -1,26 +1,43 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
+import { graphql, compose } from 'react-apollo';
 
-import './movie-details.css';
+import './pokemon-details.css';
 
-import { DecktopNav, DecktopMovieInformation } from '../movie-details-desktop';
-import { MobNav, MobMovieInformation } from '../movie-details-mb';
+import { DecktopNav, DecktopPokemonInformation } from '../pokemon-details-desktop';
+import { MobNav, MobPokemonInformation } from '../pokemon-details-mb';
 import NoPoster from '../../assets/icons/NoPoster.jpg';
+import { addToFavorites, changeCurrentPokemon } from '../../graphql/queries';
 
 
-class MovieDetails extends Component {
-  
+class PokemonDetails extends Component {
   addToFavorites = () => {
-   
+    const { addToFavoritesAction, pokemon } = this.props;
+    addToFavoritesAction({
+      variables: {
+        name: pokemon.name,
+        image: pokemon.image,
+      },
+    });
   };
+
+  goBack = () => {
+    const { changePokemonAction, history } = this.props;
+    changePokemonAction({
+      variables: {
+        name: '',
+      },
+    });
+    history.goBack();
+  }
 
   render() {
     const {
-      movie, history, isFavorite, onHandleNext,
+      pokemon, isFavorite, onHandleNext,
     } = this.props;
     const style = classNames({ hidden: !isFavorite });
-    const poster = movie.posterPath || NoPoster;
+    const poster = pokemon.image || NoPoster;
     const sectionStyle = {
       backgroundImage: `url(${poster})`,
     };
@@ -29,15 +46,15 @@ class MovieDetails extends Component {
       <div className="wrapper">
         <div className="section" style={sectionStyle} />
         <div className="content">
-          <MobNav onHandleBack={history.goBack} onHandleNext={onHandleNext} />
-          <MobMovieInformation
-            movie={movie}
+          <MobNav onHandleBack={this.goBack} onHandleNext={onHandleNext} />
+          <MobPokemonInformation
+            pokemon={pokemon}
             btnStyle={style}
             addToFavorites={this.addToFavorites}
           />
-          <DecktopNav onHandleBack={history.goBack} onHandleNext={onHandleNext} />
-          <DecktopMovieInformation
-            movie={movie}
+          <DecktopNav onHandleBack={this.goBack} onHandleNext={onHandleNext} />
+          <DecktopPokemonInformation
+            pokemon={pokemon}
             btnStyle={style}
             addToFavorites={this.addToFavorites}
           />
@@ -48,8 +65,8 @@ class MovieDetails extends Component {
 }
 
 export default withRouter(
-    connect(
-      null,
-      mapDispatchToProps,
-    )(MovieDetails),
-  );
+  compose(
+    graphql(changeCurrentPokemon, { name: 'changePokemonAction' }),
+    graphql(addToFavorites, { name: 'addToFavoritesAction' }),
+  )(PokemonDetails),
+);

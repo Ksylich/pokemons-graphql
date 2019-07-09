@@ -1,10 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+
 
 import leftArrow from '../../assets/icons/left-arrow.png';
 import rightArrow from '../../assets/icons/right-arrow.png';
 
-import './movie-details-mb.css';
+import './pokemon-details-mb.css';
 
 const MobNav = ({ onHandleBack, onHandleNext }) => (
   <div className="nav-bar-m">
@@ -25,9 +25,5 @@ const MobNav = ({ onHandleBack, onHandleNext }) => (
   </div>
 );
 
-MobNav.propTypes = {
-  onHandleBack: PropTypes.func.isRequired,
-  onHandleNext: PropTypes.func.isRequired,
-};
 
 export default MobNav;
