@@ -22,19 +22,19 @@ class PokemonDetails extends Component {
     });
   };
 
-  goBack = () => {
+  goBack = async () => {
     const { changePokemonAction, history } = this.props;
-    changePokemonAction({
+    history.goBack();
+    await changePokemonAction({
       variables: {
         name: '',
       },
     });
-    history.goBack();
   }
 
   render() {
     const {
-      pokemon, isFavorite, onHandleNext,
+      pokemon, history, isFavorite, onHandleNext,
     } = this.props;
     const style = classNames({ hidden: !isFavorite });
     const poster = pokemon.image || NoPoster;
@@ -46,7 +46,7 @@ class PokemonDetails extends Component {
       <div className="wrapper">
         <div className="section" style={sectionStyle} />
         <div className="content">
-          <MobNav onHandleBack={this.goBack} onHandleNext={onHandleNext} />
+          <MobNav onHandleBack={history.goBack} onHandleNext={onHandleNext} />
           <MobPokemonInformation
             pokemon={pokemon}
             btnStyle={style}

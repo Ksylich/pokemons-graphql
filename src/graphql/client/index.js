@@ -59,7 +59,33 @@ const resolvers = {
 
       cache.writeQuery({ query, data });
     },
+    removePokemon: (_, { name }, { cache }) => {
+      const query = gql`
+          query GetCurrentState {
+            localState @client {
+              favorites
+              currentPokemon
+              pokemonsCount
+            }
+          }
+        `;
+      const previous = cache.readQuery({ query });
+
+      const movieIndex = previous.localState.favorites.findIndex(pokemon => pokemon.name === name);
+
+
+      const data = {
+        localState: {
+          ...previous.localState,
+          favorites: [...previous.localState.favorites.slice(0, movieIndex),
+            ...previous.localState.favorites.slice(movieIndex + 1)],
+        },
+      };
+
+      cache.writeQuery({ query, data });
+    },
   },
+
 };
 
 const stateLink = withClientState({

@@ -9,9 +9,9 @@ import PokemonCards from './pokemon-cards';
 
 
 class PokemonCardsContainer extends Component {
-  changePokemon = (name) => {
+  changePokemon = async (name) => {
     const { changePokemonAction, history } = this.props;
-    changePokemonAction({
+    await changePokemonAction({
       variables: {
         name,
       },

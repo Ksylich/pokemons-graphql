@@ -5,6 +5,7 @@ import { LastLocationProvider } from 'react-router-last-location';
 import Header from '../header';
 import MainPage from '../pages/main-page';
 import PokemonDetailsPage from '../pages/pokemon-details-page';
+import FavoritesPage from '../pages/favoirtes-page';
 
 
 import './app.css';
@@ -19,7 +20,7 @@ const App = () => (
 
         <Route path="/pokemon-details-page" component={PokemonDetailsPage} />
 
-        {/* <Route path="/favorites-page" component={FavoritesPage} /> */}
+        <Route path="/favorites-page" component={FavoritesPage} />
       </Switch>
     </Fragment>
   </LastLocationProvider>
