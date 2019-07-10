@@ -49,11 +49,16 @@ class PokemonDetailsContainer extends Component {
     return (
       <Query query={getPokemons} variables={{ count: localState.pokemonsCount }}>
         {({ loading: loadingOne, error: errorOne, data: { pokemons } }) => (
-          <Query query={getPokemon} variables={{ name }}>
-            {({ lloading: loadingTwo, error: errorTwo, data: { pokemon } }) => {
-              if (loadingOne || loadingTwo) return <Spinner />;
+          <Query query={getPokemon} variables={{ name }} notifyOnNetworkStatusChange>
+            {/* fetchPolicy="network-only" */}
+            {({
+              lloading: loadingTwo, error: errorTwo, data: { pokemon }, networkStatus,
+            }) => {
+              // console.log('networkStatus', networkStatus);
               if (errorOne || errorTwo) return <ErrorIndicator />;
+              if (loadingOne || loadingTwo || networkStatus === 2) return <Spinner />;
               pokemonsArr = this.returnArr(pokemons);
+
               // console.log('pokemon', pokemon);
 
               if (pokemon !== undefined) {
